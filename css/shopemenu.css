@@ -1,0 +1,614 @@
+/* ===========================================================
+   Gaza Market — Shop Menu Page (shopemenu.html) styles
+   v4: light/white theme by default. Categories laid out in
+   columns side by side (Hot Drinks next to Cold Drinks, etc.)
+   like gazaprice.com, with plain list rows (no per-item boxes).
+   + Table reservation button and modal (bottom of file).
+   =========================================================== */
+:root{
+  --gm-text:#1c1c1c;
+  --gm-muted:#7a7a7a;
+  --gm-faint:#b5b5b5;
+  --gm-border:#eef0ef;
+  --gm-border-h:#e2e5e3;
+  --gm-surface:#ffffff;
+  --gm-shadow:0 2px 10px rgba(20,20,20,.05);
+  --gm-shadow-card:0 10px 24px rgba(20,20,20,.10);
+  --gm-accent:#3866df;
+  --gm-accent-s:#eaf0ff;
+  --gm-accent-r:#dbe6ff;
+  --gm-green:#1a9e5f;
+  --gm-green-soft:#eafaf3;
+  --bg:#ffffff;
+  --border:#eef0ef;
+  --blue:#3866df;
+  --primary:#ffd400;
+  --en-font:'Cairo', sans-serif;
+  --transition:.15s ease;
+}
+
+html{ scroll-behavior:smooth; }
+body{ font-family:var(--en-font); background:#fbfbf9; color:var(--gm-text); }
+
+.menu-page{
+  background:#fbfbf9;
+  padding-bottom:40px;
+}
+
+/* ---------- breadcrumb ---------- */
+.menu-breadcrumb{
+  max-width:1160px;
+  margin:0 auto;
+  padding:18px 16px 0;
+  font-size:13px;
+  color:var(--gm-muted);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.menu-breadcrumb a{ color:var(--gm-muted); text-decoration:none; }
+.menu-breadcrumb a:hover{ color:var(--blue); }
+.menu-breadcrumb i{ font-size:10px; }
+
+/* ---------- shop header: compact single-line bar (gazaprice-style) ---------- */
+.shop-header{
+  max-width:1160px;
+  margin:16px auto 0;
+  padding:12px 18px;
+  background:var(--gm-surface);
+  border:1px solid var(--gm-border);
+  border-radius:14px;
+  box-shadow:var(--gm-shadow);
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.shop-header__logo{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  overflow:hidden;
+  flex-shrink:0;
+  background:#d9342c;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 3px 8px rgba(0,0,0,.10);
+}
+.shop-header__logo img{ width:100%; height:100%; object-fit:cover; }
+
+.shop-header__body{ flex:1; min-width:220px; }
+.shop-header__line1{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.shop-header__name{
+  font-size:17px;
+  font-weight:800;
+  color:var(--gm-text);
+  margin:0;
+}
+.shop-header__status{
+  padding:3px 10px;
+  border-radius:100px;
+  font-size:11px;
+  font-weight:700;
+  background:rgba(26,158,95,.12);
+  color:var(--gm-green);
+}
+.shop-header__status.is-closed{
+  background:rgba(217,48,37,.12);
+  color:#d93025;
+}
+
+.shop-header__line2{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:3px;
+}
+.shop-header__cat{
+  display:inline-flex;
+  flex-shrink:0;
+  font-size:11px;
+  font-weight:700;
+  color:var(--gm-accent);
+  background:var(--gm-accent-s);
+  border:1px solid var(--gm-accent-r);
+  padding:2px 9px;
+  border-radius:100px;
+}
+.shop-header__loc{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-size:12.5px;
+  color:var(--gm-muted);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.shop-header__loc i{ font-size:11px; flex-shrink:0; }
+
+.shop-header__actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+}
+.shop-header__btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:8px 14px;
+  border-radius:10px;
+  font-size:12.5px;
+  font-weight:700;
+  text-decoration:none;
+  border:1.5px solid var(--gm-border);
+  cursor:pointer;
+  transition:var(--transition);
+  color:var(--gm-text);
+  background:var(--bg);
+  white-space:nowrap;
+  font-family:inherit;
+}
+.shop-header__btn:hover{ border-color:var(--blue); color:var(--blue); }
+.shop-header__btn--wa{
+  background:#075e54;
+  border-color:#075e54;
+  color:#eafaf3;
+}
+.shop-header__btn--wa:hover{
+  background:#128c7e;
+  border-color:#128c7e;
+  color:#fff;
+}
+
+/* زر احجز طاولتك (كان مكان أيقونة القلب) */
+.shop-header__btn--reserve{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:#1c1c1c;
+}
+.shop-header__btn--reserve:hover{
+  background:#f0c800;
+  border-color:#f0c800;
+  color:#1c1c1c;
+}
+
+@media (max-width:640px){
+  .shop-header{ align-items:flex-start; }
+  .shop-header__loc{ white-space:normal; }
+  .shop-header__actions{ width:100%; justify-content:flex-end; margin-top:6px; flex-wrap:wrap; }
+}
+
+/* ---------- sticky category pills — mobile-only quick jump ----------
+   On tablet/desktop all categories already sit side by side in columns,
+   so a filter/tab bar would be redundant there; it only earns its place
+   on mobile where the columns stack into one long page. */
+.gzm-cats{
+  display:none;
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#fbfbf9;
+  padding:16px 0 10px;
+  margin-top:6px;
+}
+@media (max-width:560px){
+  .gzm-cats{ display:block; }
+}
+.gzm-cats__wrap{
+  max-width:1160px;
+  margin:0 auto;
+  padding:0 16px;
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.gzm-cats__wrap::-webkit-scrollbar{ display:none; }
+.gzm-cat-pill{
+  flex-shrink:0;
+  padding:8px 16px;
+  border-radius:100px;
+  border:1.5px solid var(--gm-border);
+  background:#fff;
+  color:var(--gm-text);
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+  white-space:nowrap;
+  transition:var(--transition);
+}
+.gzm-cat-pill:hover{ border-color:var(--gm-accent-r); color:var(--blue); }
+.gzm-cat-pill.is-active{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:#1c1c1c;
+}
+
+/* ---------- menu content: categories side by side, like gazaprice ---------- */
+.gzm-content{
+  max-width:1160px;
+  margin:0 auto;
+  padding:16px 16px 20px;
+}
+
+.gzm-columns{
+  display:grid !important;
+  grid-template-columns:repeat(3, 1fr) !important;
+  gap:0 40px;
+  align-items:start;
+}
+.gzm-section{
+  display:block !important;
+}
+@media (max-width:900px){
+  .gzm-columns{ grid-template-columns:repeat(2, 1fr) !important; }
+}
+@media (max-width:560px){
+  .gzm-columns{ grid-template-columns:1fr !important; }
+}
+
+.gzm-section{
+  scroll-margin-top:78px;
+  padding-bottom:22px;
+  margin-bottom:10px;
+}
+.gzm-section__title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:16px;
+  font-weight:800;
+  color:var(--gm-text);
+  margin:0 0 10px;
+  padding-bottom:10px;
+  border-bottom:2px solid var(--gm-border);
+}
+.gzm-section__title::before{
+  content:"";
+  width:5px;
+  height:16px;
+  border-radius:3px;
+  background:var(--gm-green);
+  flex-shrink:0;
+}
+
+.gzm-list{
+  display:flex;
+  flex-direction:column;
+}
+
+.gzm-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 0;
+  border-bottom:1px dashed var(--gm-border);
+}
+.gzm-list .gzm-item:last-child{ border-bottom:none; }
+
+.gzm-item__info{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+.gzm-item__icon{
+  flex-shrink:0;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--gm-green-soft);
+  color:var(--gm-green);
+  font-size:11px;
+}
+.gzm-item__name{
+  font-size:14px;
+  font-weight:700;
+  color:var(--gm-text);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.gzm-item__desc{
+  font-size:11.5px;
+  color:var(--gm-muted);
+  margin-top:2px;
+}
+.gzm-item__price{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  font-size:13.5px;
+  font-weight:800;
+  color:var(--gm-green);
+  background:var(--gm-green-soft);
+  padding:4px 10px;
+  border-radius:100px;
+  white-space:nowrap;
+}
+
+/* Arabic content area is RTL for correct alignment of item names */
+.gzm-content[dir="rtl"] .gzm-item{ text-align:right; }
+
+/* ===========================================================
+   Table reservation modal
+   =========================================================== */
+.rsv-modal .modal-content{
+  border:none;
+  border-radius:18px;
+  overflow:hidden;
+  font-family:var(--en-font);
+}
+.rsv-modal__head{
+  background:var(--primary);
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.rsv-modal__title{
+  margin:0;
+  font-size:17px;
+  font-weight:800;
+  color:#1c1c1c;
+}
+.rsv-modal__sub{
+  margin:2px 0 0;
+  font-size:12.5px;
+  color:#4a4300;
+}
+.rsv-modal__close{
+  width:32px;
+  height:32px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  flex-shrink:0;
+}
+.rsv-modal__close:hover{ background:#fff; }
+
+.rsv-modal__body{ padding:20px; }
+
+.rsv-field{ margin-bottom:14px; }
+.rsv-label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:6px;
+  color:var(--gm-text);
+}
+.rsv-label span{ color:#d93025; }
+.rsv-input{
+  width:100%;
+  padding:10px 12px;
+  border:1.5px solid var(--gm-border-h);
+  border-radius:10px;
+  font-family:inherit;
+  font-size:14px;
+  background:#fff;
+  color:var(--gm-text);
+  transition:var(--transition);
+}
+.rsv-input:focus{
+  outline:none;
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px var(--gm-accent-r);
+}
+.rsv-input.is-invalid{ border-color:#d93025; }
+.rsv-err{
+  display:none;
+  margin-top:4px;
+  font-size:12px;
+  color:#d93025;
+}
+.rsv-input.is-invalid + .rsv-err{ display:block; }
+.rsv-hint{
+  margin-top:4px;
+  font-size:12px;
+  color:var(--gm-muted);
+}
+
+.rsv-submit{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:var(--gm-green);
+  color:#fff;
+  font-family:inherit;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  transition:var(--transition);
+}
+.rsv-submit:hover{ background:#148550; }
+.rsv-submit:disabled{ background:var(--gm-faint); cursor:not-allowed; }
+
+.rsv-success{
+  display:none;
+  text-align:center;
+  padding:30px 20px;
+}
+.rsv-success.is-visible{ display:block; }
+.rsv-success i{
+  font-size:46px;
+  color:var(--gm-green);
+  margin-bottom:12px;
+}
+.rsv-success h6{ font-size:17px; font-weight:800; margin-bottom:6px; }
+.rsv-success p{ font-size:13.5px; color:var(--gm-muted); margin:0; }
+    /* زر احجز طاولتك في هيدر المحل: أخضر */
+    .shop-header__btn--reserve {
+      background:  #15803d;
+      color: #fff;
+    }
+    .shop-header__btn--reserve:hover {
+      background: #3866df;
+            color: #fff;
+    }
+
+    /* ---------- المودل ---------- */
+    #reserveModal {
+      --g-50:  #f0fdf4;
+      --g-100: #dcfce7;
+      --g-200: #bbf7d0;
+      --g-500: #15803d;
+      --g-600: #15803d;
+      --g-700: #15803d;
+      --ink:   #1f2937;
+      --muted: #6b7280;
+      font-family: 'Cairo', sans-serif;
+    }
+    #reserveModal .modal-dialog { max-width: 440px; }
+
+    #reserveModal .rsv-content {
+      background: #ffffff;
+      color: var(--ink);
+      border: 0;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(22, 101, 52, .22);
+    }
+
+    /* Header */
+    #reserveModal .rsv-header {
+      position: relative;
+      padding: 26px 24px 22px;
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--g-600) 0%, var(--g-500) 100%);
+    }
+    #reserveModal .rsv-header::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 15% 0%, rgba(255,255,255,.22), transparent 55%);
+      pointer-events: none;
+    }
+    #reserveModal .rsv-header__icon {
+      position: relative; z-index: 1;
+      width: 56px; height: 56px; margin: 0 auto 10px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    #reserveModal .rsv-title { position: relative; z-index: 1; margin: 0; font-size: 20px; font-weight: 800; color: #fff; }
+    #reserveModal .rsv-subtitle { position: relative; z-index: 1; margin: 4px 0 0; font-size: 13px; color: rgba(255,255,255,.9); }
+    #reserveModal .rsv-close {
+      position: absolute; z-index: 2; top: 14px; left: 14px;
+      width: 32px; height: 32px; border: 0; border-radius: 50%;
+      background: rgba(255, 255, 255, .22); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background .15s;
+    }
+    #reserveModal .rsv-close:hover { background: rgba(255, 255, 255, .36); }
+
+    /* Body */
+    #reserveModal .rsv-body { padding: 22px 24px 24px; background: #fff; }
+    #reserveModal .rsv-field { margin-bottom: 16px; }
+    #reserveModal .rsv-label {
+      display: block; margin-bottom: 6px;
+      font-size: 13px; font-weight: 700; color: var(--ink);
+    }
+    #reserveModal .rsv-wrap { position: relative; }
+    #reserveModal .rsv-wrap > i {
+      position: absolute; top: 50%; right: 14px; transform: translateY(-50%);
+      color: var(--g-600); font-size: 15px; pointer-events: none; z-index: 1;
+    }
+    #reserveModal .rsv-input {
+      width: 100%;
+      background: var(--g-50);
+      color: var(--ink);
+      border: 1.5px solid var(--g-100);
+      border-radius: 14px;
+      padding: 12px 44px 12px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s, background .15s;
+    }
+    #reserveModal .rsv-input::placeholder { color: #9ca3af; }
+    #reserveModal .rsv-input:hover { border-color: var(--g-200); }
+    #reserveModal .rsv-input:focus {
+      background: #fff;
+      border-color: var(--g-500);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, .15);
+    }
+    #reserveModal .rsv-input:disabled { opacity: .6; cursor: not-allowed; }
+    #reserveModal .rsv-input.is-invalid { border-color: #ef4444; background: #fef2f2; }
+    #reserveModal .rsv-input.is-invalid:focus { box-shadow: 0 0 0 4px rgba(239, 68, 68, .15); }
+
+    /* القائمة المنسدلة */
+    #reserveModal select.rsv-input {
+      appearance: none; -webkit-appearance: none; -moz-appearance: none;
+      cursor: pointer;
+      padding-left: 40px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2316a34a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: left 14px center;
+    }
+    #reserveModal select.rsv-input:focus { background-color: #fff; }
+    #reserveModal select.rsv-input option { color: var(--ink); background: #fff; }
+    #reserveModal select.rsv-input option:disabled { color: #9ca3af; }
+    #reserveModal input[type="datetime-local"] { color-scheme: light; }
+
+    #reserveModal .rsv-err {
+      display: none; margin-top: 5px; font-size: 12px; font-weight: 600; color: #dc2626;
+    }
+    #reserveModal .rsv-input.is-invalid ~ .rsv-err { display: block; }
+    #reserveModal .rsv-hint { margin-top: 6px; font-size: 12px; color: var(--g-700); }
+    #reserveModal .rsv-hint:empty { display: none; }
+
+    /* Submit */
+    #reserveModal .rsv-submit {
+      width: 100%; border: 0; border-radius: 14px; padding: 13px;
+      background: linear-gradient(135deg, var(--g-600), var(--g-500));
+      color: #fff; font-weight: 800; font-size: 15px; font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(22, 163, 74, .3);
+      transition: transform .15s, box-shadow .15s;
+    }
+    #reserveModal .rsv-submit:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--g-600), var(--g-500));
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(22, 163, 74, .36);
+    }
+    #reserveModal .rsv-submit:active:not(:disabled) { transform: translateY(0); }
+    #reserveModal .rsv-submit:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; background: linear-gradient(135deg, var(--g-600), var(--g-500)); }
+    #reserveModal .rsv-note {
+      margin: 12px 0 0; text-align: center; font-size: 12px; color: var(--muted);
+    }
+    #reserveModal .rsv-note i { color: var(--g-600); margin-left: 4px; }
+
+    /* Success (السكربت بيضيف is-visible) */
+    #reserveModal .rsv-success { display: none; text-align: center; padding: 14px 4px 4px; }
+    #reserveModal .rsv-success.is-visible { display: block; }
+    #reserveModal .rsv-success__icon {
+      width: 72px; height: 72px; margin: 0 auto 14px; border-radius: 50%;
+      background: var(--g-100); color: var(--g-600);
+      display: flex; align-items: center; justify-content: center; font-size: 30px;
+      box-shadow: 0 0 0 8px var(--g-50);
+    }
+    #reserveModal .rsv-success__icon i { font-size: inherit; margin: 0; color: inherit; }
+    #reserveModal .rsv-success h6 { font-size: 18px; font-weight: 800; margin-bottom: 6px; color: var(--ink); }
+    #reserveModal .rsv-success p { color: var(--muted); font-size: 14px; margin-bottom: 18px; }

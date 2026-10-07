@@ -1,0 +1,337 @@
+/*
+ * listing.css
+ * Styles for the standalone listing details page (listing.html).
+ * Reuses the color/spacing tokens already defined in market.css
+ * (--gm-green, --gm-yellow, --gm-ink, --gm-line, etc.) so the details page
+ * reads as part of the same product, not a bolt-on. Load order:
+ * all.css / main.css / frameworkG.css → market.css → listing.css
+ *
+ * NOTE: this file now contains everything that used to live in the inline
+ * <style> block inside listing.html. Once this file is linked, that inline
+ * block can be deleted from listing.html entirely.
+ */
+
+.lst-wrap{ background:var(--gm-bg); }
+
+/* ---- breadcrumb ---- */
+.lst-crumbs{
+  display:flex; align-items:center; flex-wrap:wrap; gap:6px;
+  font-size:12.5px; color:var(--gm-muted); margin:0 0 14px;
+}
+.lst-crumbs a{ color:var(--gm-muted); text-decoration:none; }
+.lst-crumbs a:hover{ color:var(--gm-green-dark); text-decoration:underline; }
+.lst-crumbs .sep{ opacity:.55; }
+.lst-crumbs .current{ color:var(--gm-ink); font-weight:600; }
+
+.lst-back{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:13px; font-weight:600; color:var(--gm-green-dark);
+  text-decoration:none; margin-bottom:16px;
+}
+.lst-back:hover{ color:var(--gm-green-dark); text-decoration:underline; }
+.lst-back svg{ flex:0 0 auto; }
+
+/* ---- layout ----
+   Two columns, gallery on the left / info panel on the right. Columns start
+   at the top (align-items:start) instead of stretching to match each
+   other's height — that's what was making the photo balloon up to the
+   height of the whole info panel. The gallery's own height is capped
+   below via .lst-gallery__frame instead. */
+.lst-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);
+  gap:22px;
+  align-items:start;
+}
+@media (max-width:980px){
+  .lst-layout{ grid-template-columns:1fr; }
+}
+
+/* ---- gallery / slider ----
+   480px here is only a FALLBACK size used before JS runs (or if JS is
+   disabled). The real height is set precisely by syncGalleryHeight() in
+   listing.js, which measures the actual bottom edge of the left sidebar
+   (Menu box + Categories box together) and matches the photo to it, so
+   it ends exactly where the sidebar ends — not just level with its last
+   item. Do not remove this fallback; it prevents the image height from
+   collapsing to 0 on the first paint. */
+.lst-gallery{
+  background:var(--gm-card); border:1px solid var(--gm-line); border-radius:16px;
+  overflow:hidden;
+}
+.lst-gallery__main{
+  position:relative; overflow:hidden;
+}
+.lst-gallery__frame{
+  width:100%;
+  height:480px;
+  max-height:480px;
+  display:flex; align-items:center; justify-content:center;
+  background:#f3f4f6;
+}
+.lst-gallery__frame img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  animation:lstFadeIn .25s ease;
+}
+@keyframes lstFadeIn{ from{ opacity:0; } to{ opacity:1; } }
+.lst-gallery__frame .lst-icon-fallback{
+  display:flex; align-items:center; justify-content:center;
+  width:100%; height:100%; color:#9aa3af;
+}
+.lst-icon-fallback svg{ width:72px; height:72px; }
+
+@media (max-width:991px){
+  .lst-gallery__frame{ height:320px; max-height:320px; }
+}
+
+/* prev/next arrows */
+.lst-gallery__nav{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:38px; height:38px; border-radius:50%; border:none; padding:0;
+  background:rgba(15,23,20,.45); color:#fff; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; z-index:3; transition:background .15s ease, opacity .15s ease;
+}
+.lst-gallery__nav:hover{ background:rgba(15,23,20,.72); }
+.lst-gallery__nav--prev{ left:12px; }
+.lst-gallery__nav--next{ right:12px; }
+.lst-gallery__nav[hidden]{ display:none; }
+
+/* dot indicators */
+.lst-gallery__dots{
+  position:absolute; bottom:12px; left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:6px; z-index:3;
+}
+.lst-gallery__dots button{
+  width:8px; height:8px; padding:0; border:none; border-radius:50%;
+  background:rgba(255,255,255,.55); cursor:pointer; transition:all .15s ease;
+}
+.lst-gallery__dots button.is-active{ background:#fff; width:20px; border-radius:5px; }
+.lst-gallery__dots[hidden]{ display:none; }
+
+/* ---- description / generic section card ---- */
+.lst-section{
+  background:var(--gm-card); border:1px solid var(--gm-line); border-radius:16px;
+  padding:18px 20px; margin-top:16px;
+}
+.lst-info .lst-section{
+  background:transparent; border:none; border-radius:0; padding:0; margin-top:0; margin-bottom:18px;
+}
+.lst-section h2{
+  font-size:14px; font-weight:700; color:var(--gm-ink); margin:0 0 10px;
+  text-transform:uppercase; letter-spacing:.04em;
+}
+.lst-info .lst-section h2{ font-size:1.05rem; text-transform:none; letter-spacing:normal; margin-bottom:.5rem; }
+.lst-section p{ font-size:14.5px; line-height:1.9; color:#3b4440; margin:0; }
+.lst-info #lstDescription{ white-space:pre-line; }
+
+/* "Show more / Show less" toggle appended by listing.js */
+.lst-desc-toggle{
+  display:inline-block;
+  margin-top:4px;
+  padding:0;
+  border:none;
+  background:none;
+  color:#2f6fed;
+  font-weight:600;
+  font-size:.85rem;
+  cursor:pointer;
+}
+.lst-desc-toggle:hover{ text-decoration:underline; }
+
+.lst-detail-grid{
+  display:grid; grid-template-columns:repeat(2,1fr); gap:12px 20px; margin-top:4px;
+}
+.lst-detail-item{ display:flex; flex-direction:column; gap:2px; }
+.lst-detail-item .lst-detail-label{ font-size:11.5px; color:var(--gm-muted); }
+.lst-detail-item .lst-detail-value{ font-size:14px; font-weight:700; color:var(--gm-ink); }
+
+/* ---- info / sticky panel ---- */
+.lst-info{
+  background:var(--gm-card); border:1px solid var(--gm-line); border-radius:16px;
+  padding:20px; position:sticky; top:16px;
+}
+.lst-top-row{
+  display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;
+}
+
+/* Negotiable + Condition chips shown together */
+.lst-info__badges{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0; }
+.lst-top-actions{ display:flex; gap:8px; flex:0 0 auto; }
+.lst-top-actions .lst-btn--icon{ width:38px; height:38px; padding:0; border-radius:10px; }
+
+.lst-chip{
+  display:inline-flex; align-items:center;
+  font-size:.78rem; font-weight:700; padding:3px 10px; border-radius:999px;
+  white-space:nowrap; border:1px solid transparent; color:#fff; text-transform:capitalize;
+}
+.lst-chip--new{ background:var(--gm-new); }
+.lst-chip--used{ background:var(--gm-used); }
+.lst-chip--urgent{ background:var(--gm-urgent); }
+.lst-chip--outline{
+  background:#fff; color:var(--gm-green-dark); border:1px solid var(--gm-green);
+}
+.lst-chip--negotiable{ background:#2563eb; }
+.lst-chip--fixed{ background:#6b7280; }
+
+/* Condition chips get a visible border so light colors (e.g. "Used")
+   never blend into a white/light card background. */
+.lst-chip--condition-new    { background:#e6f4ea; color:#1e7e34; border-color:#bfe6cd; }
+.lst-chip--condition-used   { background:#eef1f5; color:#3c4a58; border-color:#c9d1da; }
+.lst-chip--condition-urgent { background:#fdeaea; color:#c0392b; border-color:#f3bcbc; }
+
+.lst-info h1{
+  font-size:20px; font-weight:800; color:#14171a; margin:0 0 8px; line-height:1.4;
+}
+.lst-price-row{ display:flex; align-items:baseline; gap:10px; margin-bottom:14px; }
+.lst-price{ font-size:28px; font-weight:800; color:#2563eb; }
+
+/* ---- Meta list: Region / Posted time / Category ----
+   Single organized row, side by side, wrapping on narrow widths, with a
+   divider underneath separating it from the contact buttons. */
+.lst-meta-list{
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px 22px;
+  margin:10px 0 16px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--gm-line);
+}
+.lst-meta-list .lst-meta-row{
+  display:flex !important;
+  align-items:center !important;
+  gap:6px;
+  margin:0 !important;
+  color:#55606b;
+  font-size:.92rem;
+}
+.lst-meta-list .lst-meta-row svg{
+  display:inline-block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  flex-shrink:0;
+  width:15px !important;
+  height:15px !important;
+  color:var(--gm-green-dark, #2f6fed);
+}
+
+.lst-actions{ display:flex; gap:10px; margin-bottom:18px; }
+.lst-btn{
+  flex:1; border:none; border-radius:12px; padding:12px 14px; font-weight:700; font-size:14px;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;
+  transition:transform .15s ease, background .15s ease;
+}
+.lst-btn--primary{ background:var(--gm-green); color:#fff; }
+.lst-btn--primary:hover{ background:var(--gm-green-dark); transform:translateY(-1px); }
+.lst-btn--icon{
+  flex:0 0 auto; width:46px; background:#fff; border:1px solid var(--gm-line); color:var(--gm-ink);
+}
+.lst-btn--icon:hover{ border-color:var(--gm-green); color:var(--gm-green-dark); }
+.lst-btn--icon.is-saved{ color:var(--gm-green); border-color:var(--gm-green); }
+.lst-btn--icon.is-saved svg{ fill:currentColor; }
+
+/* ---- Phone + WhatsApp buttons ---- */
+.lst-contact-numbers{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin:4px 0 18px;
+}
+.lst-contact-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:.7rem 1rem;
+  border-radius:10px;
+  font-weight:600;
+  font-size:.95rem;
+  text-decoration:none;
+  direction:ltr;
+  justify-content:center;
+}
+.lst-contact-row svg{ flex-shrink:0; }
+.lst-contact-row--phone{ background:#2f6fed; color:#fff; }
+.lst-contact-row--phone:hover{ background:#2559c7; color:#fff; }
+.lst-contact-row--whatsapp{
+  background:#e9f9ef;
+  color:#1e7e34;
+  border:1px solid #bfe8cc;
+}
+.lst-contact-row--whatsapp:hover{ background:#dcf5e6; color:#166028; }
+
+.lst-seller{
+  display:flex; align-items:center; gap:12px; padding-top:16px; border-top:1px solid var(--gm-line);
+}
+.lst-seller__avatar{
+  width:44px; height:44px; border-radius:50%; background:var(--gm-green);
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:16px; flex:0 0 auto;
+}
+.lst-seller__name{ font-size:14px; font-weight:700; color:var(--gm-ink); margin:0; }
+.lst-seller__meta{ font-size:12px; color:var(--gm-muted); margin:2px 0 0; }
+
+.lst-safety{
+  display:flex; gap:8px; font-size:12px; color:var(--gm-muted);
+  margin-top:14px; padding-top:14px; border-top:1px solid var(--gm-line); line-height:1.7;
+}
+.lst-safety i{ color:var(--gm-used); margin-top:2px; }
+
+/* ---- similar listings ---- */
+.lst-similar{ margin-top:28px; }
+.lst-similar h2{ font-size:16px; font-weight:800; color:var(--gm-ink); margin:0 0 14px; }
+.lst-similar-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+}
+@media (max-width:1200px){ .lst-similar-grid{ grid-template-columns:repeat(3,1fr); } }
+@media (max-width:820px){ .lst-similar-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:480px){ .lst-similar-grid{ grid-template-columns:1fr; } }
+
+/* ---- not found state ---- */
+.lst-not-found{
+  text-align:center; padding:60px 20px; background:var(--gm-card);
+  border:1px dashed var(--gm-line); border-radius:16px; color:var(--gm-muted);
+}
+.lst-not-found i{ font-size:34px; color:var(--gm-used); margin-bottom:12px; display:block; }
+.lst-not-found a{ color:var(--gm-green-dark); font-weight:700; }
+   /* ---- Layout ---- */
+    .lst-layout { display: grid; grid-template-columns: 1.15fr .85fr; gap: 28px; align-items: start; }
+    .lst-gallery__frame { height: 480px; max-height: 480px; border-radius: 14px; overflow: hidden; background: #f3f4f6; }
+    .lst-gallery__frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* display:block فوق كان يلغي الـ hidden تبع السلايدر */
+    .lst-gallery__frame img[hidden] { display: none; }
+    .lst-icon-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #9aa3af; }
+    .lst-icon-fallback svg { width: 72px; height: 72px; }
+    @media (max-width: 991px) {
+      .lst-layout { grid-template-columns: 1fr; }
+      .lst-gallery__frame, .lst-gallery__frame img, .lst-icon-fallback { height: 320px; max-height: 320px; }
+    }
+
+    /* ---- Chips ---- */
+    .lst-info__badges { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .lst-chip { display: inline-flex; align-items: center; font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
+    .lst-chip--condition-new    { background: #e6f4ea; color: #1e7e34; border-color: #bfe6cd; }
+    .lst-chip--condition-used   { background: #eef1f5; color: #3c4a58; border-color: #c9d1da; }
+    .lst-chip--condition-urgent { background: #fdeaea; color: #c0392b; border-color: #f3bcbc; }
+
+    /* ---- Meta row (Region / Posted / Category) ---- */
+    .lst-meta-list { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin: 10px 0 16px; padding-bottom: 14px; border-bottom: 1px solid #e5e7eb; }
+    .lst-meta-list .lst-meta-row { display: flex !important; align-items: center !important; gap: 6px; color: #55606b; font-size: .92rem; margin: 0 !important; }
+    .lst-meta-list .lst-meta-row svg { display: inline-block !important; visibility: visible !important; opacity: 1 !important; flex-shrink: 0; width: 15px !important; height: 15px !important; color: #2f6fed; }
+
+    /* ---- Phone + WhatsApp ---- */
+    .lst-contact-numbers { display: flex; flex-direction: column; gap: 10px; margin: 4px 0 18px; }
+    .lst-contact-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: .7rem 1rem; border-radius: 10px; font-weight: 600; font-size: .95rem; text-decoration: none; direction: ltr; justify-content: center; }
+    .lst-contact-row svg { flex-shrink: 0; }
+    .lst-contact-row--phone { background: #2f6fed; color: #fff; }
+    .lst-contact-row--phone:hover { background: #2559c7; color: #fff; }
+    .lst-contact-row--whatsapp { background: #e9f9ef; color: #1e7e34; border: 1px solid #bfe8cc; }
+    .lst-contact-row--whatsapp:hover { background: #dcf5e6; color: #166028; }
+
+    /* ---- Description ---- */
+    .lst-info .lst-section h2 { font-size: 1.05rem; margin-bottom: .5rem; }
+    .lst-info .lst-section { margin-bottom: 18px; }
+    .lst-info #lstDescription { white-space: pre-line; }
+    .lst-desc-toggle { display: inline-block; margin-top: 4px; padding: 0; border: none; background: none; color: #2f6fed; font-weight: 600; font-size: .85rem; cursor: pointer; }
+    .lst-desc-toggle:hover { text-decoration: underline; }

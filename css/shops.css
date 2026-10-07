@@ -1,0 +1,1149 @@
+/* =========================================================
+   Gaza Market — Shops Directory (shops.html) styles
+   Reuses the design tokens defined in main.css (:root vars)
+   NOTE: cleaned version — removed the unused/duplicate
+   ".shop-card" family (the markup actually uses ".gm-card",
+   which is now defined here instead of inline in shops.html)
+
+   UPDATE (this pass):
+   1) .gm-btn (WhatsApp / Menu) is now shorter and has a real
+      transition, so hover/press feels smooth instead of
+      snapping instantly.
+   2) All Font Awesome icons that used to live on this page
+      (filter bar, card actions, empty state) were replaced
+      with inline SVG in shops.html, matching the project's
+      official Lucide-based icon approach. The old
+      `.shop-empty i` rule is now `.shop-empty svg`.
+   3) Added a full CSS-only filtering system (radio inputs +
+      :has()) so the shop list filters (All / Category /
+      Region) work without Shops.js. See the "CSS-only
+      filtering" section near the bottom of this file.
+   ========================================================= */
+
+/* Quick type shortcut buttons (left sidebar) */
+.quick-types {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quick-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid var(--gm-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--en-font);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.quick-type:hover {
+  background: var(--bg-hover);
+  border-color: var(--gm-border-h);
+  transform: translateX(2px);
+}
+
+.quick-type.is-active {
+  background: var(--gm-accent-s);
+  border-color: var(--gm-accent-r);
+  color: var(--blue);
+}
+
+/* =========================================================
+   Page shell (fixes the missing row/container that was
+   collapsing the left sidebar + main content into a stack)
+   ========================================================= */
+
+.page-shell {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* =========================================================
+   GM shop grid + card (this is what the markup actually uses)
+   ========================================================= */
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 1.25rem;
+}
+
+.gm-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid #eef0ef;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(20, 20, 20, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gm-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(20, 20, 20, 0.1);
+}
+
+.gm-card.is-hidden {
+  display: none;
+}
+
+/* ---- Image box: fixed size no matter the source image size ---- */
+.gm-card__media {
+  position: relative;
+  width: 100%;
+  height: 170px;
+  overflow: hidden;
+  background: #f2f2f2;
+}
+
+.gm-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Open / Closed badge */
+.gm-badge-status {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #fff;
+  background: #1a9e5f;
+  z-index: 2;
+  letter-spacing: 0.3px;
+}
+
+.gm-badge-status.is-closed {
+  background: #b0303a;
+}
+
+/* ---- Favorite heart button (pure CSS toggle, no JS) ---- */
+.gm-fav {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+}
+
+.gm-fav input {
+  position: absolute;
+  opacity: 0;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.gm-fav label {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.gm-fav label svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: #8a8a8a;
+  stroke-width: 2;
+  transition: fill 0.15s ease, stroke 0.15s ease, transform 0.15s ease;
+}
+
+.gm-fav input:checked + label svg {
+  fill: #e6323f;
+  stroke: #e6323f;
+  transform: scale(1.1);
+}
+
+/* ---- Card body ---- */
+.gm-card__body {
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.gm-badge-cat {
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3866df;
+  background: #eaf0ff;
+  padding: 3px 10px;
+  border-radius: 999px;
+  line-height: 1.4;
+}
+
+.gm-card__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin-top: 2px;
+}
+
+.gm-card__name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1c1c1c;
+  line-height: 1.3;
+  margin: 0;
+  min-width: 0;
+  flex: 1 1 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gm-rating {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #e8a13c;
+  white-space: nowrap;
+}
+
+.gm-rating svg {
+  width: 14px;
+  height: 14px;
+  fill: #e8a13c;
+}
+
+.gm-card__location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  font-size: 12.5px;
+  color: #7a7a7a;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.gm-card__location svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  stroke: #7a7a7a;
+}
+
+.gm-card__actions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* ---- Card action buttons (WhatsApp / Menu) ----
+   Shorter + a real transition so hover/press is smooth. */
+.gm-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease, transform 0.1s ease;
+}
+
+.gm-btn:active {
+  transform: scale(0.97);
+}
+
+.gm-btn--whatsapp {
+  background: #25d366;
+  color: #fff;
+  border-color: #25d366;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.28);
+}
+
+.gm-btn--whatsapp:hover {
+  background: #1ebd5a;
+  border-color: #1ebd5a;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+}
+
+.gm-btn--menu {
+  background: #3866df;
+  color: #fff;
+  border-color: #3866df;
+  box-shadow: 0 2px 8px rgba(56, 102, 223, 0.25);
+}
+
+.gm-btn--menu:hover {
+  background: #2a52c9;
+  border-color: #2a52c9;
+  box-shadow: 0 4px 12px rgba(56, 102, 223, 0.32);
+}
+
+.gm-btn svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   GM filter bar — All / Category (dropdown) / Region (dropdown)
+   ========================================================= */
+
+.gm-filterbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: #fff;
+  border: 1px solid #eef0ef;
+  border-radius: 16px;
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 10px rgba(20, 20, 20, 0.04);
+}
+
+.gm-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1.5px solid #dfe2e0;
+  background: #fff;
+  color: #3c3c3c;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.gm-filter-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.gm-filter-btn:hover {
+  border-color: #1a9e5f;
+  background: #e8f8ee;
+  color: #1a9e5f;
+}
+
+.gm-filter-btn:active {
+  transform: scale(0.97);
+}
+
+.gm-filter-btn.is-active {
+  background: #1a9e5f;
+  border-color: #1a9e5f;
+  color: #fff;
+}
+
+/* Dropdown triggers (Category / Region): kill Bootstrap's default caret
+   and draw our own clear chevron so both buttons look identical and
+   are obviously clickable, in both the resting and open state. */
+.gm-filter-btn.dropdown-toggle {
+  padding-right: 14px;
+}
+
+.gm-filter-btn.dropdown-toggle::after {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 0 0 0 2px;
+  border: none;
+  border-right: 2.5px solid #1c1c1c;
+  border-bottom: 2.5px solid #1c1c1c;
+  transform: rotate(45deg);
+  transition: transform 0.18s ease, border-color 0.18s ease;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.gm-filter-btn.dropdown-toggle:hover::after,
+.gm-filter-btn.dropdown-toggle[aria-expanded="true"]::after {
+  border-color: #1a9e5f;
+  opacity: 1;
+}
+
+.gm-filter-btn.is-active.dropdown-toggle::after {
+  border-color: #fff;
+  opacity: 1;
+}
+
+.gm-filter-btn.dropdown-toggle[aria-expanded="true"]::after {
+  transform: rotate(-135deg);
+}
+
+.gm-filter-btn.dropdown-toggle[aria-expanded="true"] {
+  border-color: #1a9e5f;
+  color: #1a9e5f;
+  background: #e8f8ee;
+}
+
+.gm-filter-dropdown {
+  position: relative;
+}
+
+.gm-filter-dropdown .dropdown-menu {
+  border-radius: 12px;
+  border: 1px solid #eef0ef;
+  box-shadow: 0 10px 28px rgba(20, 20, 20, 0.1);
+  padding: 6px;
+  min-width: 200px;
+}
+
+.gm-filter-dropdown .dropdown-item {
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3c3c3c;
+  cursor: pointer;
+}
+
+.gm-filter-dropdown .dropdown-item:hover,
+.gm-filter-dropdown .dropdown-item:focus {
+  background: #e8f8ee;
+  color: #1a9e5f;
+}
+
+.gm-filter-dropdown .dropdown-item.is-active {
+  background: #1a9e5f;
+  color: #fff;
+}
+
+.gm-filter-dropdown .dropdown-item svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Region dropdown: nested collapsible groups (Central/South/North Gaza),
+   same idea as the top-nav "Select Region" menu, built with native
+   <details>/<summary> so it needs no extra JS. */
+.gm-region-menu {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.gm-region-group {
+  border-radius: 8px;
+}
+
+.gm-region-group__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #3c3c3c;
+  cursor: pointer;
+  list-style: none;
+}
+
+.gm-region-group__toggle::-webkit-details-marker {
+  display: none;
+}
+
+.gm-region-group__toggle:hover {
+  background: #e8f8ee;
+  color: #1a9e5f;
+}
+
+.gm-region-group__toggle::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.18s ease;
+}
+
+.gm-region-group[open] > .gm-region-group__toggle::after {
+  transform: rotate(45deg);
+}
+
+.gm-region-group__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 2px 0 4px 12px;
+}
+
+.gm-region-group__list .gm-region-option {
+  font-weight: 500;
+}
+
+.gm-filter-dropdown .dropdown-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: #9a9a9a;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 6px 10px 2px;
+}
+
+.gm-filter-dropdown .dropdown-item--open {
+  color: #1a9e5f;
+}
+
+.gm-filter-dropdown .dropdown-item--open svg {
+  color: #1a9e5f;
+}
+
+@media (max-width: 576px) {
+  .gm-filterbar {
+    flex-wrap: wrap;
+  }
+  .gm-filter-btn {
+    flex: 1;
+    justify-content: center;
+  }
+  .gm-filter-dropdown {
+    flex: 1;
+  }
+  .gm-filter-dropdown .gm-filter-btn {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   Empty state
+   ========================================================= */
+
+.shop-empty {
+  text-align: center;
+  padding: 40px 20px;
+  border: 1.5px dashed var(--gm-border-h);
+  border-radius: 12px;
+  color: var(--gm-muted);
+  margin-bottom: 1.25rem;
+}
+
+.shop-empty svg {
+  width: 30px;
+  height: 30px;
+  color: var(--gm-faint);
+  margin: 0 auto 10px;
+  display: block;
+}
+
+.shop-empty p {
+  font-family: var(--en-font);
+  font-weight: 700;
+  color: var(--gm-text);
+  margin: 0 0 4px;
+}
+
+.shop-empty span {
+  font-family: var(--en-font);
+  font-size: 12.5px;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.shop-empty__btn {
+  border: none;
+  background: var(--primary);
+  color: #000;
+  font-weight: 700;
+  border-radius: 100px;
+  padding: 8px 20px;
+  font-family: var(--en-font);
+  font-size: 13px;
+  transition: var(--transition);
+}
+
+.shop-empty__btn:hover {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* =========================================================
+   Load more
+   ========================================================= */
+
+.shop-loadmore-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.shop-loadmore {
+  border: 1.5px solid var(--gm-border);
+  background: var(--bg);
+  color: var(--gm-text);
+  font-family: var(--en-font);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 9px 26px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.shop-loadmore:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.shop-loadmore:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 480px) {
+  .gm-card__media {
+    height: 130px;
+  }
+  .gm-card__body {
+    padding: 10px 12px 12px;
+  }
+  .gm-card__name {
+    font-size: 14px;
+  }
+}
+
+/* =========================================================
+   CSS-only filtering (All / Category / Region) — no JS
+   ---------------------------------------------------------
+   How it works:
+   - Each filter option is a hidden radio input. Its visible
+     "button" is actually a <label for="..."> styled exactly
+     like the old buttons (.gm-filter-btn / .dropdown-item /
+     .quick-type), so clicking it toggles the radio.
+   - #shopsScope wraps BOTH the radios and the shop grid /
+     sidebar, so :has() can reach from one to the other.
+   - Per-item highlighting uses a simple adjacent-sibling
+     selector (#radio:checked + label), since each radio sits
+     right before its own label in the markup.
+   - Card hiding, trigger-button highlighting, the trigger
+     label text, and the sidebar "popular type" shortcuts all
+     need :has() because they are not direct siblings of the
+     radios.
+   ========================================================= */
+
+/* Visually-hidden but still focusable/clickable radios */
+.gm-filter-radio {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+/* ---- Trigger label text swap (Category / Region buttons) ---- */
+.gm-filter-label-text {
+  display: none;
+}
+
+#shopsScope:has(#cat-all:checked) [data-show-when="cat-all"],
+#shopsScope:has(#cat-restaurant:checked) [data-show-when="cat-restaurant"],
+#shopsScope:has(#cat-cafe:checked) [data-show-when="cat-cafe"],
+#shopsScope:has(#cat-restaurant-cafe:checked) [data-show-when="cat-restaurant-cafe"],
+#shopsScope:has(#cat-open:checked) [data-show-when="cat-open"],
+#shopsScope:has(#region-all:checked) [data-show-when="region-all"],
+#shopsScope:has(#region-nuseirat:checked) [data-show-when="region-nuseirat"],
+#shopsScope:has(#region-breij:checked) [data-show-when="region-breij"],
+#shopsScope:has(#region-maghazi:checked) [data-show-when="region-maghazi"],
+#shopsScope:has(#region-zawayda:checked) [data-show-when="region-zawayda"],
+#shopsScope:has(#region-deirbalah:checked) [data-show-when="region-deirbalah"],
+#shopsScope:has(#region-khanyunis:checked) [data-show-when="region-khanyunis"],
+#shopsScope:has(#region-rafah:checked) [data-show-when="region-rafah"],
+#shopsScope:has(#region-mawasikhanyunis:checked) [data-show-when="region-mawasikhanyunis"],
+#shopsScope:has(#region-mawasiqarara:checked) [data-show-when="region-mawasiqarara"],
+#shopsScope:has(#region-alrimal:checked) [data-show-when="region-alrimal"],
+#shopsScope:has(#region-alshaati:checked) [data-show-when="region-alshaati"],
+#shopsScope:has(#region-sheikhradwan:checked) [data-show-when="region-sheikhradwan"],
+#shopsScope:has(#region-saftawi:checked) [data-show-when="region-saftawi"],
+#shopsScope:has(#region-beithanoun:checked) [data-show-when="region-beithanoun"],
+#shopsScope:has(#region-beitlahia:checked) [data-show-when="region-beitlahia"],
+#shopsScope:has(#region-talhawa:checked) [data-show-when="region-talhawa"],
+#shopsScope:has(#region-jabalia:checked) [data-show-when="region-jabalia"] {
+  display: inline;
+}
+
+/* ---- Per-item highlight inside each dropdown (radio + label are siblings) ---- */
+.gm-filter-radio:checked + .gm-cat-option,
+.gm-filter-radio:checked + .gm-region-option {
+  background: #1a9e5f;
+  color: #fff;
+}
+
+.gm-filter-radio:checked + .dropdown-item--open {
+  background: #1a9e5f;
+  color: #fff;
+}
+
+/* ---- "All" button + trigger buttons active state ---- */
+#shopsScope:has(#cat-all:checked) #filterAllBtn {
+  background: #1a9e5f;
+  border-color: #1a9e5f;
+  color: #fff;
+}
+
+#shopsScope:not(:has(#cat-all:checked)) #categoryFilterBtn {
+  background: #1a9e5f;
+  border-color: #1a9e5f;
+  color: #fff;
+}
+
+#shopsScope:not(:has(#region-all:checked)) #regionFilterBtn {
+  background: #1a9e5f;
+  border-color: #1a9e5f;
+  color: #fff;
+}
+
+/* ---- Sidebar "Popular Types" shortcuts stay in sync ---- */
+#shopsScope:has(#cat-cafe:checked) .quick-type[data-type="cafes"],
+#shopsScope:has(#cat-restaurant:checked) .quick-type[data-type="restaurants"] {
+  background: var(--gm-accent-s);
+  border-color: var(--gm-accent-r);
+  color: var(--blue);
+}
+
+/* ---- Card visibility rules ----
+   Default (cat-all / region-all checked) shows every card;
+   selecting anything else hides cards that don't match. */
+#shopsScope:has(#cat-restaurant:checked) .gm-card:not([data-category~="restaurant"]),
+#shopsScope:has(#cat-cafe:checked) .gm-card:not([data-category~="cafe"]),
+#shopsScope:has(#cat-restaurant-cafe:checked) .gm-card:not([data-category~="restaurant"][data-category~="cafe"]),
+#shopsScope:has(#cat-open:checked) .gm-card:not([data-status="open"]) {
+  display: none;
+}
+
+#shopsScope:has(#region-nuseirat:checked) .gm-card:not([data-region="nuseirat"]),
+#shopsScope:has(#region-breij:checked) .gm-card:not([data-region="breij"]),
+#shopsScope:has(#region-maghazi:checked) .gm-card:not([data-region="maghazi"]),
+#shopsScope:has(#region-zawayda:checked) .gm-card:not([data-region="zawayda"]),
+#shopsScope:has(#region-deirbalah:checked) .gm-card:not([data-region="deirbalah"]),
+#shopsScope:has(#region-khanyunis:checked) .gm-card:not([data-region="khanyunis"]),
+#shopsScope:has(#region-rafah:checked) .gm-card:not([data-region="rafah"]),
+#shopsScope:has(#region-mawasikhanyunis:checked) .gm-card:not([data-region="mawasikhanyunis"]),
+#shopsScope:has(#region-mawasiqarara:checked) .gm-card:not([data-region="mawasiqarara"]),
+#shopsScope:has(#region-alrimal:checked) .gm-card:not([data-region="alrimal"]),
+#shopsScope:has(#region-alshaati:checked) .gm-card:not([data-region="alshaati"]),
+#shopsScope:has(#region-sheikhradwan:checked) .gm-card:not([data-region="sheikhradwan"]),
+#shopsScope:has(#region-saftawi:checked) .gm-card:not([data-region="saftawi"]),
+#shopsScope:has(#region-beithanoun:checked) .gm-card:not([data-region="beithanoun"]),
+#shopsScope:has(#region-beitlahia:checked) .gm-card:not([data-region="beitlahia"]),
+#shopsScope:has(#region-talhawa:checked) .gm-card:not([data-region="talhawa"]),
+#shopsScope:has(#region-jabalia:checked) .gm-card:not([data-region="jabalia"]) {
+  display: none;
+}
+/* =========================================================
+   Gaza Market — Category filter (shops-category-filter.css)
+   لازم يتحمّل بعد shops.css
+   ---------------------------------------------------------
+   يغطي:
+   1) شكل قائمة التصنيفات (dropdown) + المجموعات الفرعية <details>
+   2) تمييز الخيار المحدد (بدل sibling selector اللي ما كان يشتغل
+      لأن الراديوهات برا القائمة)
+   3) تبديل نص زر التصنيف
+   4) إخفاء الكروت حسب Workspace / Store / التصنيف الفرعي
+   ========================================================= */
+
+/* ---------- 1) القائمة ---------- */
+.gm-cat-menu {
+  width: 290px;
+  max-width: calc(100vw - 24px);
+  max-height: 70vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px !important;
+  font-family: var(--en-font, "Cairo", sans-serif);
+  scrollbar-width: thin;
+  scrollbar-color: #cfd6d2 transparent;
+}
+
+.gm-cat-menu::-webkit-scrollbar { width: 6px; }
+.gm-cat-menu::-webkit-scrollbar-thumb { background: #cfd6d2; border-radius: 10px; }
+
+.gm-cat-menu > li { list-style: none; }
+
+/* الخيار العادي (label) */
+.gm-cat-menu .gm-cat-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #3c3c3c;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.gm-cat-menu .gm-cat-option:hover {
+  background: #e8f8ee;
+  color: #1a9e5f;
+}
+
+/* الأيقونة */
+.gm-cat-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #f3f5f4;
+  color: #6b736f;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.gm-cat-ico svg { width: 15px; height: 15px; }
+
+.gm-cat-option:hover .gm-cat-ico,
+.gm-cat-group__toggle:hover .gm-cat-ico,
+.gm-cat-group[open] > .gm-cat-group__toggle .gm-cat-ico {
+  background: #d4f1df;
+  color: #1a9e5f;
+}
+
+/* عنوان "Stores" */
+.gm-cat-menu .gm-cat-heading {
+  padding: 10px 10px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+
+.gm-cat-menu .dropdown-divider {
+  margin: 6px 4px;
+  border-color: #eef0ef;
+}
+
+/* ---------- المجموعات الفرعية ---------- */
+.gm-cat-group {
+  border-radius: 8px;
+  margin: 1px 0;
+}
+
+.gm-cat-group__toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #3c3c3c;
+  cursor: pointer;
+  list-style: none;            /* يشيل المثلث الافتراضي */
+  user-select: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.gm-cat-group__toggle::-webkit-details-marker { display: none; }
+.gm-cat-group__toggle::marker { content: ""; }
+
+.gm-cat-group__toggle > span:last-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.gm-cat-group__toggle:hover {
+  background: #e8f8ee;
+  color: #1a9e5f;
+}
+
+/* سهم مخصص */
+.gm-cat-group__toggle::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.18s ease;
+  opacity: 0.7;
+}
+
+[dir="rtl"] .gm-cat-group__toggle::after { transform: rotate(135deg); }
+
+.gm-cat-group[open] > .gm-cat-group__toggle {
+  background: #f3f9f5;
+  color: #1a9e5f;
+}
+
+.gm-cat-group[open] > .gm-cat-group__toggle::after { transform: rotate(45deg); }
+
+/* قائمة الخيارات الفرعية */
+.gm-cat-group__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 3px 0 6px;
+  padding-inline-start: 6px;
+  margin-inline-start: 24px;   /* يحاذي النص مش الأيقونة */
+  border-inline-start: 2px solid #e3eae6;
+}
+
+.gm-cat-group__list .gm-cat-option {
+  padding: 6px 10px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+/* خيار Open */
+.gm-cat-menu .dropdown-item--open { color: #1a9e5f; }
+.gm-cat-menu .dropdown-item--open .gm-cat-ico { background: #d4f1df; color: #1a9e5f; }
+
+/* ---------- 2) تمييز الخيار المحدد ---------- */
+#shopsScope:has(#cat-all:checked) label[for="cat-all"].gm-cat-option,
+#shopsScope:has(#cat-cowork:checked) label[for="cat-cowork"].gm-cat-option,
+#shopsScope:has(#cat-restaurant:checked) label[for="cat-restaurant"].gm-cat-option,
+#shopsScope:has(#cat-cafe:checked) label[for="cat-cafe"].gm-cat-option,
+#shopsScope:has(#cat-restaurant-cafe:checked) label[for="cat-restaurant-cafe"].gm-cat-option,
+#shopsScope:has(#cat-store:checked) label[for="cat-store"].gm-cat-option,
+#shopsScope:has(#cat-open:checked) label[for="cat-open"].gm-cat-option,
+#shopsScope:has(#cat-sub-general-grocery:checked) label[for="cat-sub-general-grocery"],
+#shopsScope:has(#cat-sub-supermarket:checked) label[for="cat-sub-supermarket"],
+#shopsScope:has(#cat-sub-vegetables-fruits:checked) label[for="cat-sub-vegetables-fruits"],
+#shopsScope:has(#cat-sub-meat:checked) label[for="cat-sub-meat"],
+#shopsScope:has(#cat-sub-fish:checked) label[for="cat-sub-fish"],
+#shopsScope:has(#cat-sub-bakery:checked) label[for="cat-sub-bakery"],
+#shopsScope:has(#cat-sub-sweets-pastries:checked) label[for="cat-sub-sweets-pastries"],
+#shopsScope:has(#cat-sub-spices-herbs:checked) label[for="cat-sub-spices-herbs"],
+#shopsScope:has(#cat-sub-pharmacy:checked) label[for="cat-sub-pharmacy"],
+#shopsScope:has(#cat-sub-clinic-medicine:checked) label[for="cat-sub-clinic-medicine"],
+#shopsScope:has(#cat-sub-medical-supplies:checked) label[for="cat-sub-medical-supplies"],
+#shopsScope:has(#cat-sub-optics:checked) label[for="cat-sub-optics"],
+#shopsScope:has(#cat-sub-mens-clothing:checked) label[for="cat-sub-mens-clothing"],
+#shopsScope:has(#cat-sub-womens-clothing:checked) label[for="cat-sub-womens-clothing"],
+#shopsScope:has(#cat-sub-kids-clothing:checked) label[for="cat-sub-kids-clothing"],
+#shopsScope:has(#cat-sub-shoes:checked) label[for="cat-sub-shoes"],
+#shopsScope:has(#cat-sub-accessories:checked) label[for="cat-sub-accessories"],
+#shopsScope:has(#cat-sub-tailoring:checked) label[for="cat-sub-tailoring"],
+#shopsScope:has(#cat-sub-home-furniture:checked) label[for="cat-sub-home-furniture"],
+#shopsScope:has(#cat-sub-furnishings-curtains:checked) label[for="cat-sub-furnishings-curtains"],
+#shopsScope:has(#cat-sub-household-tools:checked) label[for="cat-sub-household-tools"],
+#shopsScope:has(#cat-sub-electrical-appliances:checked) label[for="cat-sub-electrical-appliances"],
+#shopsScope:has(#cat-sub-cleaning-supplies:checked) label[for="cat-sub-cleaning-supplies"],
+#shopsScope:has(#cat-sub-plumbing-supplies:checked) label[for="cat-sub-plumbing-supplies"],
+#shopsScope:has(#cat-sub-mobile-accessories:checked) label[for="cat-sub-mobile-accessories"],
+#shopsScope:has(#cat-sub-computers-laptops:checked) label[for="cat-sub-computers-laptops"],
+#shopsScope:has(#cat-sub-electronics:checked) label[for="cat-sub-electronics"],
+#shopsScope:has(#cat-sub-solar-energy:checked) label[for="cat-sub-solar-energy"],
+#shopsScope:has(#cat-sub-repair-maintenance:checked) label[for="cat-sub-repair-maintenance"],
+#shopsScope:has(#cat-sub-building-materials:checked) label[for="cat-sub-building-materials"],
+#shopsScope:has(#cat-sub-iron-aluminum:checked) label[for="cat-sub-iron-aluminum"],
+#shopsScope:has(#cat-sub-paints-decor:checked) label[for="cat-sub-paints-decor"],
+#shopsScope:has(#cat-sub-wood:checked) label[for="cat-sub-wood"],
+#shopsScope:has(#cat-sub-ceramics-tiles:checked) label[for="cat-sub-ceramics-tiles"],
+#shopsScope:has(#cat-sub-bookstore-stationery:checked) label[for="cat-sub-bookstore-stationery"],
+#shopsScope:has(#cat-sub-childrens-toys:checked) label[for="cat-sub-childrens-toys"],
+#shopsScope:has(#cat-sub-art-drawing-tools:checked) label[for="cat-sub-art-drawing-tools"],
+#shopsScope:has(#cat-sub-mens-salon:checked) label[for="cat-sub-mens-salon"],
+#shopsScope:has(#cat-sub-womens-salon:checked) label[for="cat-sub-womens-salon"],
+#shopsScope:has(#cat-sub-laundry:checked) label[for="cat-sub-laundry"],
+#shopsScope:has(#cat-sub-photography:checked) label[for="cat-sub-photography"],
+#shopsScope:has(#cat-sub-spare-parts:checked) label[for="cat-sub-spare-parts"],
+#shopsScope:has(#cat-sub-garage-service:checked) label[for="cat-sub-garage-service"],
+#shopsScope:has(#cat-sub-tires:checked) label[for="cat-sub-tires"],
+#shopsScope:has(#cat-sub-veterinary:checked) label[for="cat-sub-veterinary"],
+#shopsScope:has(#cat-sub-fodder-supplies:checked) label[for="cat-sub-fodder-supplies"],
+#shopsScope:has(#cat-sub-agricultural-tools:checked) label[for="cat-sub-agricultural-tools"],
+#shopsScope:has(#cat-sub-miscellaneous:checked) label[for="cat-sub-miscellaneous"],
+#shopsScope:has(#cat-sub-other-store:checked) label[for="cat-sub-other-store"] {
+  background: #1a9e5f;
+  color: #fff;
+}
+
+#shopsScope:has(#cat-all:checked) label[for="cat-all"].gm-cat-option .gm-cat-ico,
+#shopsScope:has(#cat-cowork:checked) label[for="cat-cowork"] .gm-cat-ico,
+#shopsScope:has(#cat-restaurant:checked) label[for="cat-restaurant"] .gm-cat-ico,
+#shopsScope:has(#cat-cafe:checked) label[for="cat-cafe"] .gm-cat-ico,
+#shopsScope:has(#cat-restaurant-cafe:checked) label[for="cat-restaurant-cafe"] .gm-cat-ico,
+#shopsScope:has(#cat-store:checked) label[for="cat-store"] .gm-cat-ico,
+#shopsScope:has(#cat-open:checked) label[for="cat-open"] .gm-cat-ico {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+/* ---------- 3) نص زر التصنيف (الأنواع الجديدة) ---------- */
+#shopsScope:has(#cat-cowork:checked) [data-show-when="cat-cowork"],
+#shopsScope:has(#cat-store:checked) [data-show-when="cat-store"],
+#shopsScope:has(#cat-sub-general-grocery:checked) [data-show-when="cat-sub-general-grocery"],
+#shopsScope:has(#cat-sub-supermarket:checked) [data-show-when="cat-sub-supermarket"],
+#shopsScope:has(#cat-sub-vegetables-fruits:checked) [data-show-when="cat-sub-vegetables-fruits"],
+#shopsScope:has(#cat-sub-meat:checked) [data-show-when="cat-sub-meat"],
+#shopsScope:has(#cat-sub-fish:checked) [data-show-when="cat-sub-fish"],
+#shopsScope:has(#cat-sub-bakery:checked) [data-show-when="cat-sub-bakery"],
+#shopsScope:has(#cat-sub-sweets-pastries:checked) [data-show-when="cat-sub-sweets-pastries"],
+#shopsScope:has(#cat-sub-spices-herbs:checked) [data-show-when="cat-sub-spices-herbs"],
+#shopsScope:has(#cat-sub-pharmacy:checked) [data-show-when="cat-sub-pharmacy"],
+#shopsScope:has(#cat-sub-clinic-medicine:checked) [data-show-when="cat-sub-clinic-medicine"],
+#shopsScope:has(#cat-sub-medical-supplies:checked) [data-show-when="cat-sub-medical-supplies"],
+#shopsScope:has(#cat-sub-optics:checked) [data-show-when="cat-sub-optics"],
+#shopsScope:has(#cat-sub-mens-clothing:checked) [data-show-when="cat-sub-mens-clothing"],
+#shopsScope:has(#cat-sub-womens-clothing:checked) [data-show-when="cat-sub-womens-clothing"],
+#shopsScope:has(#cat-sub-kids-clothing:checked) [data-show-when="cat-sub-kids-clothing"],
+#shopsScope:has(#cat-sub-shoes:checked) [data-show-when="cat-sub-shoes"],
+#shopsScope:has(#cat-sub-accessories:checked) [data-show-when="cat-sub-accessories"],
+#shopsScope:has(#cat-sub-tailoring:checked) [data-show-when="cat-sub-tailoring"],
+#shopsScope:has(#cat-sub-home-furniture:checked) [data-show-when="cat-sub-home-furniture"],
+#shopsScope:has(#cat-sub-furnishings-curtains:checked) [data-show-when="cat-sub-furnishings-curtains"],
+#shopsScope:has(#cat-sub-household-tools:checked) [data-show-when="cat-sub-household-tools"],
+#shopsScope:has(#cat-sub-electrical-appliances:checked) [data-show-when="cat-sub-electrical-appliances"],
+#shopsScope:has(#cat-sub-cleaning-supplies:checked) [data-show-when="cat-sub-cleaning-supplies"],
+#shopsScope:has(#cat-sub-plumbing-supplies:checked) [data-show-when="cat-sub-plumbing-supplies"],
+#shopsScope:has(#cat-sub-mobile-accessories:checked) [data-show-when="cat-sub-mobile-accessories"],
+#shopsScope:has(#cat-sub-computers-laptops:checked) [data-show-when="cat-sub-computers-laptops"],
+#shopsScope:has(#cat-sub-electronics:checked) [data-show-when="cat-sub-electronics"],
+#shopsScope:has(#cat-sub-solar-energy:checked) [data-show-when="cat-sub-solar-energy"],
+#shopsScope:has(#cat-sub-repair-maintenance:checked) [data-show-when="cat-sub-repair-maintenance"],
+#shopsScope:has(#cat-sub-building-materials:checked) [data-show-when="cat-sub-building-materials"],
+#shopsScope:has(#cat-sub-iron-aluminum:checked) [data-show-when="cat-sub-iron-aluminum"],
+#shopsScope:has(#cat-sub-paints-decor:checked) [data-show-when="cat-sub-paints-decor"],
+#shopsScope:has(#cat-sub-wood:checked) [data-show-when="cat-sub-wood"],
+#shopsScope:has(#cat-sub-ceramics-tiles:checked) [data-show-when="cat-sub-ceramics-tiles"],
+#shopsScope:has(#cat-sub-bookstore-stationery:checked) [data-show-when="cat-sub-bookstore-stationery"],
+#shopsScope:has(#cat-sub-childrens-toys:checked) [data-show-when="cat-sub-childrens-toys"],
+#shopsScope:has(#cat-sub-art-drawing-tools:checked) [data-show-when="cat-sub-art-drawing-tools"],
+#shopsScope:has(#cat-sub-mens-salon:checked) [data-show-when="cat-sub-mens-salon"],
+#shopsScope:has(#cat-sub-womens-salon:checked) [data-show-when="cat-sub-womens-salon"],
+#shopsScope:has(#cat-sub-laundry:checked) [data-show-when="cat-sub-laundry"],
+#shopsScope:has(#cat-sub-photography:checked) [data-show-when="cat-sub-photography"],
+#shopsScope:has(#cat-sub-spare-parts:checked) [data-show-when="cat-sub-spare-parts"],
+#shopsScope:has(#cat-sub-garage-service:checked) [data-show-when="cat-sub-garage-service"],
+#shopsScope:has(#cat-sub-tires:checked) [data-show-when="cat-sub-tires"],
+#shopsScope:has(#cat-sub-veterinary:checked) [data-show-when="cat-sub-veterinary"],
+#shopsScope:has(#cat-sub-fodder-supplies:checked) [data-show-when="cat-sub-fodder-supplies"],
+#shopsScope:has(#cat-sub-agricultural-tools:checked) [data-show-when="cat-sub-agricultural-tools"],
+#shopsScope:has(#cat-sub-miscellaneous:checked) [data-show-when="cat-sub-miscellaneous"],
+#shopsScope:has(#cat-sub-other-store:checked) [data-show-when="cat-sub-other-store"] {
+  display: inline;
+}
+
+/* ---------- 4) إخفاء الكروت ---------- */
+#shopsScope:has(#cat-cowork:checked) .gm-card:not([data-category~="cowork"]),
+#shopsScope:has(#cat-store:checked) .gm-card:not([data-category~="store"]),
+#shopsScope:has(#cat-sub-general-grocery:checked) .gm-card:not([data-sub="general-grocery"]),
+#shopsScope:has(#cat-sub-supermarket:checked) .gm-card:not([data-sub="supermarket"]),
+#shopsScope:has(#cat-sub-vegetables-fruits:checked) .gm-card:not([data-sub="vegetables-fruits"]),
+#shopsScope:has(#cat-sub-meat:checked) .gm-card:not([data-sub="meat"]),
+#shopsScope:has(#cat-sub-fish:checked) .gm-card:not([data-sub="fish"]),
+#shopsScope:has(#cat-sub-bakery:checked) .gm-card:not([data-sub="bakery"]),
+#shopsScope:has(#cat-sub-sweets-pastries:checked) .gm-card:not([data-sub="sweets-pastries"]),
+#shopsScope:has(#cat-sub-spices-herbs:checked) .gm-card:not([data-sub="spices-herbs"]),
+#shopsScope:has(#cat-sub-pharmacy:checked) .gm-card:not([data-sub="pharmacy"]),
+#shopsScope:has(#cat-sub-clinic-medicine:checked) .gm-card:not([data-sub="clinic-medicine"]),
+#shopsScope:has(#cat-sub-medical-supplies:checked) .gm-card:not([data-sub="medical-supplies"]),
+#shopsScope:has(#cat-sub-optics:checked) .gm-card:not([data-sub="optics"]),
+#shopsScope:has(#cat-sub-mens-clothing:checked) .gm-card:not([data-sub="mens-clothing"]),
+#shopsScope:has(#cat-sub-womens-clothing:checked) .gm-card:not([data-sub="womens-clothing"]),
+#shopsScope:has(#cat-sub-kids-clothing:checked) .gm-card:not([data-sub="kids-clothing"]),
+#shopsScope:has(#cat-sub-shoes:checked) .gm-card:not([data-sub="shoes"]),
+#shopsScope:has(#cat-sub-accessories:checked) .gm-card:not([data-sub="accessories"]),
+#shopsScope:has(#cat-sub-tailoring:checked) .gm-card:not([data-sub="tailoring"]),
+#shopsScope:has(#cat-sub-home-furniture:checked) .gm-card:not([data-sub="home-furniture"]),
+#shopsScope:has(#cat-sub-furnishings-curtains:checked) .gm-card:not([data-sub="furnishings-curtains"]),
+#shopsScope:has(#cat-sub-household-tools:checked) .gm-card:not([data-sub="household-tools"]),
+#shopsScope:has(#cat-sub-electrical-appliances:checked) .gm-card:not([data-sub="electrical-appliances"]),
+#shopsScope:has(#cat-sub-cleaning-supplies:checked) .gm-card:not([data-sub="cleaning-supplies"]),
+#shopsScope:has(#cat-sub-plumbing-supplies:checked) .gm-card:not([data-sub="plumbing-supplies"]),
+#shopsScope:has(#cat-sub-mobile-accessories:checked) .gm-card:not([data-sub="mobile-accessories"]),
+#shopsScope:has(#cat-sub-computers-laptops:checked) .gm-card:not([data-sub="computers-laptops"]),
+#shopsScope:has(#cat-sub-electronics:checked) .gm-card:not([data-sub="electronics"]),
+#shopsScope:has(#cat-sub-solar-energy:checked) .gm-card:not([data-sub="solar-energy"]),
+#shopsScope:has(#cat-sub-repair-maintenance:checked) .gm-card:not([data-sub="repair-maintenance"]),
+#shopsScope:has(#cat-sub-building-materials:checked) .gm-card:not([data-sub="building-materials"]),
+#shopsScope:has(#cat-sub-iron-aluminum:checked) .gm-card:not([data-sub="iron-aluminum"]),
+#shopsScope:has(#cat-sub-paints-decor:checked) .gm-card:not([data-sub="paints-decor"]),
+#shopsScope:has(#cat-sub-wood:checked) .gm-card:not([data-sub="wood"]),
+#shopsScope:has(#cat-sub-ceramics-tiles:checked) .gm-card:not([data-sub="ceramics-tiles"]),
+#shopsScope:has(#cat-sub-bookstore-stationery:checked) .gm-card:not([data-sub="bookstore-stationery"]),
+#shopsScope:has(#cat-sub-childrens-toys:checked) .gm-card:not([data-sub="childrens-toys"]),
+#shopsScope:has(#cat-sub-art-drawing-tools:checked) .gm-card:not([data-sub="art-drawing-tools"]),
+#shopsScope:has(#cat-sub-mens-salon:checked) .gm-card:not([data-sub="mens-salon"]),
+#shopsScope:has(#cat-sub-womens-salon:checked) .gm-card:not([data-sub="womens-salon"]),
+#shopsScope:has(#cat-sub-laundry:checked) .gm-card:not([data-sub="laundry"]),
+#shopsScope:has(#cat-sub-photography:checked) .gm-card:not([data-sub="photography"]),
+#shopsScope:has(#cat-sub-spare-parts:checked) .gm-card:not([data-sub="spare-parts"]),
+#shopsScope:has(#cat-sub-garage-service:checked) .gm-card:not([data-sub="garage-service"]),
+#shopsScope:has(#cat-sub-tires:checked) .gm-card:not([data-sub="tires"]),
+#shopsScope:has(#cat-sub-veterinary:checked) .gm-card:not([data-sub="veterinary"]),
+#shopsScope:has(#cat-sub-fodder-supplies:checked) .gm-card:not([data-sub="fodder-supplies"]),
+#shopsScope:has(#cat-sub-agricultural-tools:checked) .gm-card:not([data-sub="agricultural-tools"]),
+#shopsScope:has(#cat-sub-miscellaneous:checked) .gm-card:not([data-sub="miscellaneous"]),
+#shopsScope:has(#cat-sub-other-store:checked) .gm-card:not([data-sub="other-store"]) {
+  display: none;
+}
+
+/* ---------- موبايل ---------- */
+@media (max-width: 576px) {
+  .gm-cat-menu {
+    width: 100%;
+    max-height: 60vh;
+  }
+}

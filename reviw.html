@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>إعلانك قيد المراجعة | سوق غزة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#feee00; --blue:#3866df; --blue-dark:color-mix(in srgb,var(--blue) 82%,black);
+  --bg:#fff; --bg-hover:rgba(0,0,0,.05); --text:#000; --border-color:#e0e0e0; --desc:#303030;
+  --modal-bg:#fff; --modal-border:#f0f0f0; --modal-input-bg:#fafafa; --modal-input-border:#eee;
+  --gm-muted:#6b6b65; --gm-faint:#b0b0a8; --gm-accent-s:rgba(29,110,245,.07); --gm-accent-r:rgba(29,110,245,.16);
+  --gm-green-r:rgba(56,102,223,.18);
+  --gm-shadow:0 1px 3px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.04);
+  --en-font:"Cairo",sans-serif; --transition:.3s; --border-radius:8px;
+  --page:#eaeaea;
+}
+body.dark-mode{
+  --bg:#111820; --text:#fff; --bg-hover:rgba(255,255,255,.08); --border-color:#333; --desc:#aaa;
+  --modal-bg:#1c1c1c; --modal-border:#2a2a2a; --modal-input-bg:#222; --modal-input-border:#2e2e2e;
+  --gm-muted:#9a9a94; --gm-faint:#5a5a55; --gm-accent-s:rgba(29,110,245,.12); --gm-accent-r:rgba(29,110,245,.24);
+  --page:#0b1016;
+}
+body{font-family:var(--en-font);background:var(--page);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;-webkit-font-smoothing:antialiased;transition:background .3s}
+
+/* ===== backdrop mimic (remove inside your project: Bootstrap modal provides it) ===== */
+.demo-theme{position:fixed;top:16px;inset-inline-start:16px;width:34px;height:34px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg);color:var(--text);cursor:pointer;font-size:15px}
+
+/* ===== modal card ===== */
+.review-card{
+  position:relative;width:100%;max-width:440px;background:var(--modal-bg);
+  border-radius:18px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.18);
+  text-align:center;animation:rvIn .5s cubic-bezier(.34,1.3,.64,1) both;
+}
+@keyframes rvIn{from{opacity:0;transform:translateY(22px) scale(.97)}to{opacity:1;transform:none}}
+.review-card::before{content:"";position:absolute;top:0;inset-inline:0;height:5px;background:var(--primary)}
+.review-close{position:absolute;top:16px;inset-inline-end:16px;width:32px;height:32px;border:none;border-radius:50%;background:var(--modal-input-bg);color:var(--desc);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s}
+.review-close:hover{background:var(--primary);color:#1a1a1a}
+
+.review-body{padding:38px 24px 8px}
+
+/* animated icon */
+.review-icon{position:relative;width:96px;height:96px;margin:0 auto 20px}
+.review-icon__ring{position:absolute;inset:0;border-radius:50%;background:color-mix(in srgb,var(--primary) 35%,transparent);animation:rvPulse 2.4s ease-in-out infinite}
+.review-icon__ring.r2{animation-delay:1.2s}
+@keyframes rvPulse{0%{transform:scale(.8);opacity:.9}100%{transform:scale(1.45);opacity:0}}
+.review-icon__core{position:relative;width:96px;height:96px;border-radius:50%;background:var(--primary);color:#1a1a1a;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px -8px rgba(216,201,0,.65);animation:rvPop .55s cubic-bezier(.22,1.4,.36,1) both}
+@keyframes rvPop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.review-icon__core svg{width:44px;height:44px;overflow:visible}
+.hg-top,.hg-bot{transform-origin:center}
+.hg-spin{transform-origin:12px 12px;animation:rvFlip 3.2s ease-in-out infinite}
+@keyframes rvFlip{0%,55%{transform:rotate(0)}85%,100%{transform:rotate(180deg)}}
+
+.review-title{font-size:21px;font-weight:800;margin-bottom:8px}
+.review-desc{font-size:13px;line-height:1.9;color:var(--gm-muted);max-width:330px;margin:0 auto 22px;font-weight:600}
+
+/* eta chip */
+.review-eta{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:var(--gm-accent-s);color:var(--blue);font-size:12px;font-weight:700;margin-bottom:24px}
+.review-eta svg{width:14px;height:14px}
+
+/* timeline */
+.review-steps{display:flex;align-items:flex-start;justify-content:space-between;position:relative;margin:0 6px 26px}
+.review-steps::before{content:"";position:absolute;top:15px;inset-inline:16%;height:3px;border-radius:3px;background:var(--modal-input-border)}
+.review-steps::after{content:"";position:absolute;top:15px;inset-inline-start:16%;height:3px;border-radius:3px;background:var(--blue);width:34%;animation:rvFill 1.2s .3s ease both}
+@keyframes rvFill{from{width:0}}
+.rs{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.rs__dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--modal-bg);border:2px solid var(--modal-input-border);color:var(--gm-faint);font-size:12px;font-weight:800}
+.rs__dot svg{width:15px;height:15px}
+.rs__label{font-size:11.5px;font-weight:700;color:var(--gm-faint)}
+.rs.done .rs__dot{background:var(--blue);border-color:var(--blue);color:#fff}
+.rs.done .rs__label{color:var(--blue)}
+.rs.active .rs__dot{background:var(--primary);border-color:var(--primary);color:#1a1a1a;box-shadow:0 0 0 5px color-mix(in srgb,var(--primary) 35%,transparent);animation:rvGlow 1.8s ease-in-out infinite}
+.rs.active .rs__label{color:var(--text)}
+@keyframes rvGlow{50%{box-shadow:0 0 0 9px color-mix(in srgb,var(--primary) 0%,transparent)}}
+
+/* ad summary (same look as .npw-review-list) */
+.review-list{border:1px solid var(--modal-border);border-radius:14px;overflow:hidden;box-shadow:var(--gm-shadow);text-align:start;margin-bottom:14px}
+.review-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;background:var(--modal-input-bg)}
+.review-row:nth-child(even){background:var(--modal-bg)}
+.review-row+.review-row{border-top:1px solid var(--modal-border)}
+.review-label{font-size:.76rem;font-weight:700;color:var(--gm-muted)}
+.review-value{font-size:.86rem;font-weight:700;max-width:62%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.review-value.price{color:var(--blue);font-size:1.05rem;font-weight:800}
+.badge-pending{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:999px;background:color-mix(in srgb,var(--primary) 45%,transparent);color:#6b5e00;font-size:11.5px;font-weight:800}
+body.dark-mode .badge-pending{color:var(--primary);background:rgba(254,238,0,.14)}
+.badge-pending i{width:6px;height:6px;border-radius:50%;background:currentColor;animation:rvBlink 1.2s infinite}
+@keyframes rvBlink{50%{opacity:.25}}
+
+/* note (same look as .addition-note) */
+.review-note{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--modal-input-bg);border:1px solid rgba(254,238,0,.6);text-align:start;margin-bottom:6px}
+.review-note svg{width:18px;height:18px;flex-shrink:0;color:#25d366}
+.review-note p{font-size:11.5px;line-height:1.7;font-weight:700;color:var(--desc)}
+
+/* actions (same look as .price-success-actions) */
+.review-actions{display:flex;gap:12px;padding:18px 24px 24px}
+.review-actions a{flex:1;display:flex;align-items:center;justify-content:center;min-height:48px;padding:12px 14px;border-radius:12px;font-family:var(--en-font);font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap;transition:transform .15s,background .2s,color .2s,border-color .2s,box-shadow .2s}
+.review-actions a:active{transform:scale(.97)}
+.btn-primary{background:var(--primary);color:var(--text);box-shadow:0 8px 20px -8px rgba(216,201,0,.55)}
+.btn-primary:hover{background:var(--blue);color:#fff;transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--border-color);color:var(--text)}
+.btn-outline:hover{background:var(--bg-hover);transform:translateY(-1px)}
+@media(max-width:380px){.review-actions{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+
+<button class="demo-theme" onclick="document.body.classList.toggle('dark-mode')" aria-label="Toggle dark mode">◐</button>
+
+<div class="review-card" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+  <button class="review-close" aria-label="إغلاق">
+    <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></svg>
+  </button>
+
+  <div class="review-body">
+    <div class="review-icon" aria-hidden="true">
+      <span class="review-icon__ring"></span><span class="review-icon__ring r2"></span>
+      <div class="review-icon__core">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <g class="hg-spin"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></g>
+        </svg>
+      </div>
+    </div>
+
+    <h2 class="review-title" id="reviewTitle">إعلانك قيد المراجعة</h2>
+    <p class="review-desc">وصلنا إعلانك بنجاح، وفريقنا يراجعه الآن للتأكد من مطابقته للشروط. بمجرد الموافقة سيظهر للجميع في السوق مباشرة.</p>
+
+    <div class="review-eta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span>المراجعة تستغرق عادةً أقل من 24 ساعة</span>
+    </div>
+
+    <div class="review-steps">
+      <div class="rs done"><span class="rs__dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="rs__label">تم الإرسال</span></div>
+      <div class="rs active"><span class="rs__dot">2</span><span class="rs__label">قيد المراجعة</span></div>
+      <div class="rs"><span class="rs__dot">3</span><span class="rs__label">النشر</span></div>
+    </div>
+
+    <div class="review-list">
+      <div class="review-row"><span class="review-label">الإعلان</span><span class="review-value">ايفون</span></div>
+      <div class="review-row"><span class="review-label">السعر</span><span class="review-value price">₪1,000</span></div>
+      <div class="review-row"><span class="review-label">المنطقة</span><span class="review-value">النصيرات</span></div>
+      <div class="review-row"><span class="review-label">الحالة</span><span class="review-value"><span class="badge-pending"><i></i>قيد المراجعة</span></span></div>
+    </div>
+
+    <div class="review-note">
+      <svg fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326z"/></svg>
+      <p>سنرسل لك إشعاراً عبر واتساب فور الموافقة على إعلانك أو إن احتجنا لتعديل.</p>
+    </div>
+  </div>
+
+  <div class="review-actions">
+    <a href="home.html" class="btn-primary">العودة للرئيسية</a>
+    <a href="#" class="btn-outline" id="reviewAddAnotherBtn">إضافة إعلان آخر</a>
+  </div>
+</div>
+
+</body>
+</html>
